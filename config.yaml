@@ -1,0 +1,23 @@
+path: C:\Users\lucam\Desktop\Code\blackjack\yolo_model\code\data
+train: images/train
+val: images/train
+
+names:
+  0: num_a
+  1: num_2
+  2: num_3
+  3: num_4
+  4: num_5
+  5: num_6
+  6: num_7
+  7: num_8
+  8: num_9
+  9: num_10
+  10: num_j
+  11: num_q
+  12: num_k
+  13: suit_d
+  14: suit_h
+  15: suit_c
+  16: suit_d
+  17: card
