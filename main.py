@@ -34,12 +34,12 @@ ranks = {
 }
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+previous_card_count = 0
 
 # Check if the webcam opened correctly
 if not cap.isOpened():
     print("Error: Could not open webcam.")
     exit()
-
 
 try:
     while True:
@@ -71,12 +71,16 @@ try:
 
             if cls == 17:
                 cards.append((x1,y1,x2,y2))
+
             elif cls in {13,14,15,16}:
                 suits.append((cls, x1, y1, x2, y2))
 
         # -----------------------------
         # CARD PROCESSING
         # -----------------------------
+        running_sum = 0
+        card_count = len(cards)
+        aces = 0
         for card in cards:
 
             card_x1,card_y1,card_x2,card_y2 = card
@@ -105,6 +109,7 @@ try:
                 ):
                     suit_count += 1
                     suit_counts[cls] = suit_counts.get(cls, 0) + 1
+        
             
             # Most occuring suit in card
             card_suit = "Unknown"
@@ -112,10 +117,17 @@ try:
                 best_cls = max(suit_counts, key=suit_counts.get)
                 card_suit = suit_names.get(best_cls, "Unknown")
 
+
             # -----------------------------
             # FINAL LABEL
             # -----------------------------
             label = f"{suit_count} of {card_suit}"
+
+            # Soft hand logic (INCOMPLETE)
+            if suit_count == 1:
+                running_sum += 11
+            else:
+                running_sum += suit_count
         
             # Only drawing the card
             cv2.rectangle(
@@ -136,6 +148,16 @@ try:
                 (0, 255, 0),
                 2
             )
+        
+        # -----------------------------
+        # CARD COUNTING
+        # -----------------------------
+        if card_count != previous_card_count:
+            print(f"Card count changed: {previous_card_count} → {card_count}")
+            print("running sum:", running_sum)
+
+        previous_card_count = card_count
+        
 
         # Final frame & waitkey
         cv2.imshow('YOLO Webcam', annotated_frame)
