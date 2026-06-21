@@ -6,8 +6,8 @@ def main():
 
     model.train(
         data="config.yaml",
-        epochs=100, 
-        patience=20,
+        epochs=150, 
+        patience=30,
         device=0, # Nvidia 3080ti
         workers=8, # i5 13600kf 14C 20T
         batch=16,
@@ -16,6 +16,7 @@ def main():
     )
 
     model.val(
+        data="config.yaml",
         conf=0.25,
         project=r"C:\Users\lucam\Desktop\Code\blackjack\runs",
         name="card_val"

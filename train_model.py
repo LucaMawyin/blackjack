@@ -9,7 +9,7 @@ def main():
         epochs=200, 
         patience=40,
         device=0, # Nvidia 3080ti
-        workers=12, # i5 13600kf 14C 20T
+        workers=8, # i5 13600kf 14C 20T
         batch=16,
         project=r"C:\Users\lucam\Desktop\Code\blackjack\runs", # Explicitly state dir (saving to wrong dir otherwise) 
         name="card_train"
