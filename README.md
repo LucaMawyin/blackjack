@@ -1,4 +1,4 @@
-# YOLO Hand Tracking Project
+# YOLO Blackjack Helper
 
 ## Description
 
@@ -11,7 +11,7 @@ The model was initially trained on 2757 images, with each instance of a card hav
 The specs of the PC that ran the initial model are as follows:
 
 - CPU: Intel Core i5 13600kf
-- GPU: Nvidia RTX 3080 Ti 15G VRAM
+- GPU: Nvidia RTX 3080 Ti 12G VRAM
 - RAM: 48G 3200MHz
 
 ## Dependencies
