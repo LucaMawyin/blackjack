@@ -2,7 +2,7 @@ path: C:\Users\lucam\Desktop\Code\blackjack\initial-data\code\data
 train: images/train
 val: images/train
 
-nc: 52
+nc: 53
 
 names:
   0: AC
