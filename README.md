@@ -14,13 +14,23 @@ The specs of the PC that ran the initial model are as follows:
 - GPU: Nvidia RTX 3080 Ti 12G VRAM
 - RAM: 48G 3200MHz
 
+## CAUTION
+
+The YOLO folder contains:
+
+- 2757 training images
+- 2757 label files
+
+User discretion is advised when opening.
+
 ## Dependencies
 
 Install required libraries:
 
 ```
-pip install ultralytics
 pip install opencv-python
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install ultralytics
 ```
 
 ## File Execution Order (If Training New Model)
