@@ -16,7 +16,7 @@ The specs of the PC that ran the initial model are as follows:
 
 ## CAUTION
 
-The YOLO folder contains:
+The YOLO data and images folders contain:
 
 - 2757 training images
 - 2757 label files
