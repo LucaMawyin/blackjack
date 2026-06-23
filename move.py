@@ -2,7 +2,7 @@ import os
 import shutil
 from collections import defaultdict
 
-source_folder = "initial-data/code/data/images/train"
+source_folder = "images"
 dest_folder = "new-data/code/data/images/train"
 number_of_images = 20
 
