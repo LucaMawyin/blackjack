@@ -1,40 +1,12 @@
 import cv2
 from ultralytics import YOLO
-import logging
-from collections import defaultdict, deque
-
-
-# Turning off logging (floods output)
-logging.getLogger("ultralytics").setLevel(logging.WARNING)
 
 # Loading best performing model
-model = YOLO("runs/detect/train/weights/best.pt")
-
-suit_names = {
-    13: "Diamond",
-    14: "Heart",
-    15: "Club",
-    16: "Spade",
-}
-
-ranks = {
-    0: "A",
-    1: "2",
-    2: "3",
-    3: "4",
-    4: "5",
-    5: "6",
-    6: "7",
-    7: "8",
-    8: "9",
-    9: "10",
-    10: "J",
-    11: "Q",
-    12: "K"
-}
+model = YOLO("runs/train/weights/best.pt")
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 previous_card_count = 0
+count = 0
 
 # Check if the webcam opened correctly
 if not cap.isOpened():
@@ -50,114 +22,47 @@ try:
             break
 
         # Run model on current frame then output
-        results = model(frame, verbose=False)[0]
-        annotated_frame = frame.copy()
+        results = model(frame, conf=0.4, verbose=False)[0]
+        annotated_frame = results.plot()
 
-        cards = []
-        suits = []
+        # Reprocess if number of cards changes
+        if len(results.boxes) != previous_card_count:
 
-        # -----------------------------
-        # DETECTION
-        # -----------------------------
-        for box in results.boxes:
+            visible_sum = 0
+            num_aces = 0
 
-            cls = int(box.cls[0])
-            conf = float(box.conf[0])
+            # Printing all visible cards if there is a change
+            for card in results.boxes:
+                class_id = int(card.cls[0])
+                class_name = int(model.names[class_id])
 
-            if conf < 0.4:
-                continue
+                if class_name == 1: 
+                    num_aces += 1
 
-            x1,y1,x2,y2 = box.xyxy[0].tolist()
+                # Sum of cards visible
+                visible_sum += class_name
 
-            if cls == 17:
-                cards.append((x1,y1,x2,y2))
+            # Ace logic
+            if (visible_sum <= 10):
+                visible_sum += (num_aces * 10)
 
-            elif cls in {13,14,15,16}:
-                suits.append((cls, x1, y1, x2, y2))
+            # Base hit/stand logic
+            if (
+                (num_aces < 1 and visible_sum == 8) or 
+                (visible_sum < 17 and num_aces > 0)
+            ):
+                print("HIT")
 
-        # -----------------------------
-        # CARD PROCESSING
-        # -----------------------------
-        running_sum = 0
-        card_count = len(cards)
-        aces = 0
-        for card in cards:
+            elif (visible_sum >= 17 and num_aces == 0):
+                print("STAND")
 
-            card_x1,card_y1,card_x2,card_y2 = card
+                
+                
+                
+            print("Sum: ", visible_sum)
 
-            suit_count = 0
-            suit_counts = {}
-
-            for suit in suits:
-
-                cls, sx1, sy1, sx2, sy2 = suit
-
-                # Filtering out small suits under number
-                box_area = (sx2 - sx1) * (sy2 - sy1)
-                card_area = (card_x2 - card_x1) * (card_y2 - card_y1)
-                if box_area < 0.01 * card_area:
-                    continue
-
-                # Center of suit
-                center_x = (sx1 + sx2) / 2
-                center_y = (sy1 + sy2) / 2
-
-                # Finding if suit is in card bounding box
-                if (
-                    card_x1 <= center_x <= card_x2 and
-                    card_y1 <= center_y <= card_y2
-                ):
-                    suit_count += 1
-                    suit_counts[cls] = suit_counts.get(cls, 0) + 1
-        
-            
-            # Most occuring suit in card
-            card_suit = "Unknown"
-            if suit_counts:
-                best_cls = max(suit_counts, key=suit_counts.get)
-                card_suit = suit_names.get(best_cls, "Unknown")
-
-
-            # -----------------------------
-            # FINAL LABEL
-            # -----------------------------
-            label = f"{suit_count} of {card_suit}"
-
-            # Soft hand logic (INCOMPLETE)
-            if suit_count == 1:
-                running_sum += 11
-            else:
-                running_sum += suit_count
-        
-            # Only drawing the card
-            cv2.rectangle(
-                annotated_frame,
-                (int(card_x1), int(card_y1)),
-                (int(card_x2), int(card_y2)),
-                (0, 255, 0),
-                2
-            )
-            
-            # Only annotating with suit and value
-            cv2.putText(
-                annotated_frame,
-                label,
-                (int(card_x1), int(card_y1) - 10),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.8,
-                (0, 255, 0),
-                2
-            )
-        
-        # -----------------------------
-        # CARD COUNTING
-        # -----------------------------
-        if card_count != previous_card_count:
-            print(f"Card count changed: {previous_card_count} → {card_count}")
-            print("running sum:", running_sum)
-
-        previous_card_count = card_count
-        
+            # Update previous count
+            previous_card_count = len(results.boxes)
 
         # Final frame & waitkey
         cv2.imshow('YOLO Webcam', annotated_frame)
