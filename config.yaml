@@ -1,6 +1,6 @@
 path: C:\Users\lucam\Desktop\Code\blackjack\new-data\code\data
 train: images/train
-val: images/train
+val: images/val
 
 nc: 10
 
