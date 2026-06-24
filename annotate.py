@@ -5,9 +5,11 @@ from ultralytics import YOLO
 # Load your trained model
 model = YOLO("runs/train/weights/best.pt")
 
-image_folder = "new-data/code/data/images/train"
-label_folder = "new-data/code/data/labels/train"
-annotated_folder = "new-data/code/data/results/train"
+root_dir = "new-data/code/data/" 
+
+image_folder = root_dir + "images/train"
+label_folder = root_dir + "labels/train"
+annotated_folder = root_dir + "results/train"
 
 os.makedirs(label_folder, exist_ok=True)
 os.makedirs(annotated_folder, exist_ok=True)

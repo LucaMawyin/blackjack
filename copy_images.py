@@ -32,6 +32,7 @@ for card_label, files in cards.items():
 
         shutil.copy2(src, dst)
 
+        total_copied += 1
         # Counter
         if total_copied % number_of_images == 0:
             print(f"{total_copied} files copied so far...")
