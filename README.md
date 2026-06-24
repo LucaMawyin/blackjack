@@ -12,7 +12,7 @@ The initial YOLO model is a YOLOv26m trained on 1040 images, with each card havi
 
 ### Improved Model
 
-The initial YOLO model was used to annotate a larger dataset of 2600 images, with each card having 50 instances. The improved model was trained for 200 epochs, with a patience of 40, 8 workers, and a batch size of 16
+The initial YOLO model was used to annotate a larger dataset of 2600 images, with each card having 50 instances. The improved model was trained for 200 epochs, with a patience of 40, 8 workers, and a batch size of 16.
 
 ### Device Specs
 
