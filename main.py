@@ -2,7 +2,7 @@ import cv2
 from ultralytics import YOLO
 
 # Loading best performing model
-model = YOLO("runs/train/weights/best.pt")
+model = YOLO("runs/new_train/weights/best.pt")
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 previous_card_count = 0
@@ -22,7 +22,7 @@ try:
             break
 
         # Run model on current frame then output
-        results = model(frame, conf=0.4, verbose=False)[0]
+        results = model(frame, conf=0.5, verbose=False)[0]
         annotated_frame = results.plot()
 
         # Reprocess if number of cards changes
