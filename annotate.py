@@ -3,9 +3,9 @@ import cv2
 from ultralytics import YOLO
 
 # Load your trained model
-model = YOLO("runs/new_train/weights/best.pt")
+model = YOLO("runs/train/weights/best.pt")
 
-root_dir = "new-data-2/code/data/" 
+root_dir = "new-data/code/data/" 
 
 image_folder = root_dir + "images/train"
 label_folder = root_dir + "labels/train"
@@ -23,8 +23,7 @@ for img_name in os.listdir(image_folder):
 
     img_path = os.path.join(image_folder, img_name)
 
-    results = model(img_path, conf=0.5, verbose=False)[0]
-
+    results = model(img_path, conf=0.25, verbose=False)[0]
 
     # Images with no detection
     if results.boxes is None or len(results.boxes) == 0:
